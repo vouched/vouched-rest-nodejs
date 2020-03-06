@@ -1,0 +1,18 @@
+{
+  "env": {
+    "development": {
+      "compact": false
+    }
+  },
+  "sourceMaps": true,
+  "presets": [ "@babel/preset-env"],
+  "ignore": ["packages", "node_modules", "src/libs", "dist", ".DS_Store"],
+  "plugins": [
+    [
+      "@babel/plugin-transform-runtime",
+      {
+        "regenerator": true
+      }
+    ]
+  ]
+}

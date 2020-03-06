@@ -1,0 +1,65 @@
+{
+  "extends": [
+    "airbnb",
+    "prettier",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:react/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint", "prettier", "jest", "react"],
+  "settings": {
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts", ".tsx"]
+    },
+    "import/resolver": {
+      "typescript": {}
+    }
+  },
+  "env": {
+    "node": true,
+    "jest/globals": true
+  },
+  "globals": {},
+  "parserOptions": {
+    "ecmaVersion": 8
+  },
+  "rules": {
+    "prettier/prettier": ["error"],
+    "react/jsx-filename-extension": [
+      2,
+      { "extensions": [".js", ".jsx", ".ts", ".tsx"] }
+    ],
+    "import/no-extraneous-dependencies": [
+      2,
+      { "devDependencies": ["**/test.tsx", "**/test.ts"] }
+    ],
+    "@typescript-eslint/indent": 0,
+    "@typescript-eslint/explicit-function-return-type": 0,
+    "@typescript-eslint/camelcase": 0,
+    "indent": 0,
+    "max-len": ["error", 80],
+    "arrow-body-style": 0,
+    "arrow-parens": 0,
+    "implicit-arrow-linebreak": 0,
+    "function-paren-newline": 0,
+    "import/no-unresolved": 0,
+    "import/no-webpack-loader-syntax": 0,
+    "class-methods-use-this": 0,
+    "no-alert": 0,
+    "comma-dangle": 0,
+    "no-console": 0,
+    "no-underscore-dangle": 0,
+    "camelcase": 0,
+    "no-param-reassign": 0,
+    "space-before-blocks": 0,
+    "explicit-function-return-type": 0,
+    "import/extensions": 0,
+    "import/prefer-default-export": 0,
+    "quotes": [
+      "error",
+      "single",
+      { "avoidEscape": true, "allowTemplateLiterals": false }
+    ],
+    "no-unused-expressions": 1
+  }
+}
