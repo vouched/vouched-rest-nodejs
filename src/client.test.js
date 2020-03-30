@@ -43,7 +43,7 @@ describe('invites', () => {
       method: 'POST'
     });
     expect(errors).toMatchObject([
-      { message: 'Could not find sms:sjfkjfd', type: 'InvalidRequestError' }
+      { message: 'Could not find sms:sjfkjfd', type: 'NotFoundError' }
     ]);
   });
 });
