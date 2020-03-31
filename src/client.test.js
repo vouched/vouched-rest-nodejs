@@ -47,6 +47,23 @@ describe('invites', () => {
     ]);
   });
 });
+describe('jobs download', () => {
+  test('download confidences false', async () => {
+    const { errors } = await fetchApi(
+      `/jobs/232/download?confidences=false`,
+      {}
+    );
+    expect(errors).toMatchObject([
+      { message: 'job: 232 not found', type: 'InvalidRequestError' }
+    ]);
+  });
+  test('download default', async () => {
+    const { errors } = await fetchApi(`/jobs/232/download`, {});
+    expect(errors).toMatchObject([
+      { message: 'job: 232 not found', type: 'InvalidRequestError' }
+    ]);
+  });
+});
 describe('jobs', () => {
   test('jobs list no params', async () => {
     const { total, page, pageSize, items } = await fetchApi('/jobs', {});
