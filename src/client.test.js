@@ -11,9 +11,11 @@ describe('invites', () => {
       { type: 'AuthenticationError', message: 'Unauthorized access' }
     ]);
   });
-  test('invites', async () => {
-    const r = await fetchApi('/invites?pageSize=3&page=3', {});
-    const { total, page, pageSize, items } = await fetchApi('/invites', {});
+  test('all invites', async () => {
+    const { total, page, pageSize, items } = await fetchApi(
+      '/invites?pageSize=3&id=mKAUux8h_',
+      {}
+    );
     expect(total).toBeGreaterThan(-1);
     expect(pageSize).toBeGreaterThan(-1);
     expect(page).toBeGreaterThan(-1);
