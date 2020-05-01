@@ -75,10 +75,13 @@ describe('jobs', () => {
     expect(items.length).toBeGreaterThan(-1);
   });
   test('jobs list params', async () => {
-    const { total, page, pageSize, items } = await fetchApi(
+    const r = await fetchApi(
       '/jobs?status=completed&ids=["Ep58Ck47","djskjfks"]&from=2011-10-05T14:48:00.000Z',
       {}
     );
+    console.log(JSON.stringify({ r }, null, 2));
+
+    const { total, page, pageSize, items } = r;
     expect(total).toBeGreaterThan(-1);
     expect(pageSize).toBeGreaterThan(-1);
     expect(page).toBeGreaterThan(-1);
