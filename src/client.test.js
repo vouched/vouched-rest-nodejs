@@ -75,20 +75,22 @@ describe('jobs', () => {
     expect(items.length).toBeGreaterThan(-1);
   });
   test('jobs list params', async () => {
-    const { total, page, pageSize, items } = await fetchApi(
+    const r = await fetchApi(
       '/jobs?status=completed&ids=["Ep58Ck47","djskjfks"]&from=2011-10-05T14:48:00.000Z',
       {}
     );
+
+    const { total, page, pageSize, items } = r;
     expect(total).toBeGreaterThan(-1);
     expect(pageSize).toBeGreaterThan(-1);
     expect(page).toBeGreaterThan(-1);
     expect(items.length).toBeGreaterThan(-1);
   });
   test(
-    'job submit',
+    'job submit sunglasses',
     async () => {
       const userPhoto = await imageToBase64(
-        path.dirname(__filename) + '/../data/test-face.png'
+        path.dirname(__filename) + '/../data/test-sunglasses.jpg'
       );
       const idPhoto = await imageToBase64(
         path.dirname(__filename) + '/../data/test-id.png'
@@ -110,6 +112,47 @@ describe('jobs', () => {
         }
       };
       const job = await fetchApi('/jobs', { body, method: 'POST' });
+      expect(job.result.confidences.selfieSunglasses).toBeGreaterThan(0.97);
+      expect(job.surveyPoll).toBe(null);
+      expect(job.surveyMessage).toBe(null);
+      expect(job.surveyAt).toBe(null);
+      expect(job.result.confidences.faceMatch).toBeLessThan(0.85);
+      expect(job.status).toBe('completed');
+    },
+    20 * 1000
+  );
+  test(
+    'job submit',
+    async () => {
+      const userPhoto = await imageToBase64(
+        path.dirname(__filename) + '/../data/test-face.png'
+      );
+      const idPhoto = await imageToBase64(
+        path.dirname(__filename) + '/../data/test-id.png'
+      );
+      const body = {
+        type: 'id-verification',
+        properties: [
+          {
+            name: 'internal_id',
+            value: 'sdjklfd'
+          }
+        ],
+        params: {
+          firstName: 'John',
+          lastName: 'Bao',
+          dob: '06/22/1970',
+          userPhoto,
+          idPhoto
+        }
+      };
+      const job = await fetchApi('/jobs', { body, method: 'POST' });
+      // console.log(JSON.stringify({ job }, null, 2));
+
+      expect(job.result.confidences.selfieSunglasses).toBe(0);
+      expect(job.result.confidences.id).toBeLessThan(0.85);
+      expect(job.result.confidences.birthDateMatch).toBeGreaterThan(0.9);
+      expect(job.result.confidences.faceMatch).toBeGreaterThan(0.9);
       expect(job.status).toBe('completed');
     },
     20 * 1000
