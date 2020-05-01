@@ -79,7 +79,6 @@ describe('jobs', () => {
       '/jobs?status=completed&ids=["Ep58Ck47","djskjfks"]&from=2011-10-05T14:48:00.000Z',
       {}
     );
-    console.log(JSON.stringify({ r }, null, 2));
 
     const { total, page, pageSize, items } = r;
     expect(total).toBeGreaterThan(-1);
