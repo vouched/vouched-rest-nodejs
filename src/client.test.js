@@ -21,6 +21,24 @@ describe('invites', () => {
     expect(page).toBeGreaterThan(-1);
     expect(items.length).toBeGreaterThan(-1);
   });
+  test('create invite bad number', async () => {
+    const email = 'darwin66@lkxloans.com';
+    const r = await fetchApi('/invites', {
+      body: {
+        email,
+        firstName: 'John',
+        lastName: 'Bao',
+        phone: '0000000000',
+        contact: 'phone'
+      }
+    });
+    expect(r.errors).toMatchObject([
+      {
+        message: "The 'To' number 10000000000 is not a valid phone number.",
+        type: 'InvalidRequestError'
+      }
+    ]);
+  });
   test('create invite', async () => {
     const email = 'darwin66@lkxloans.com';
     const r = await fetchApi('/invites', {
