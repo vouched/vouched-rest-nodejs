@@ -165,7 +165,6 @@ describe('jobs', () => {
         }
       };
       const job = await fetchApi('/jobs', { body, method: 'POST' });
-      // console.log(JSON.stringify({ job }, null, 2));
 
       expect(job.result.confidences.selfieSunglasses).toBe(0);
       expect(job.result.confidences.id).toBeLessThan(0.85);
@@ -174,6 +173,90 @@ describe('jobs', () => {
       expect(job.status).toBe('completed');
     },
     20 * 1000
+  );
+  test(
+    'job review',
+    async () => {
+      const userPhoto = await imageToBase64(
+        path.dirname(__filename) + '/../data/test-face.png'
+      );
+      const idPhoto = await imageToBase64(
+        path.dirname(__filename) + '/../data/test-id.png'
+      );
+      const body = {
+        type: 'id-verification',
+        properties: [
+          {
+            name: 'internal_id',
+            value: 'sdjklfd'
+          }
+        ],
+        params: {
+          firstName: 'John',
+          lastName: 'Bao',
+          dob: '06/22/1970',
+          userPhoto,
+          idPhoto
+        }
+      };
+      // create job
+      let job = await fetchApi('/jobs', { body, method: 'POST' });
+      // submit a review override
+      const review = {
+        idValid: true,
+        selfieValid: false,
+        faceMatch: null,
+        nameMatch: true,
+        birthDateMatch: false,
+        firstName: 'New',
+        lastName: 'Name',
+        docId: '344454',
+        idType: null,
+        birthDate: '01/01/1980',
+        expireDate: '01/02/2025',
+        state: 'WA',
+        country: 'US'
+      };
+      job = await fetchApi(`/jobs/${job.id}/review`, {
+        body: review,
+        method: 'PUT'
+      });
+
+      expect(job.review.firstName).toBe('New');
+      expect(job.review.selfieValid).toBe(false);
+      expect(job.review.state).toBe('WA');
+      job = await fetchApi(`/jobs/${job.id}/review`, {
+        body: { ...review, idType: 'no-id' },
+        method: 'PUT'
+      });
+      expect(job.errors).toMatchObject([
+        {
+          type: 'InvalidRequestError',
+          message: 'Invalid id type'
+        }
+      ]);
+      job = await fetchApi(`/jobs/${job.id}/review`, {
+        body: { ...review, state: 'ZZ' },
+        method: 'PUT'
+      });
+      expect(job.errors).toMatchObject([
+        {
+          type: 'InvalidRequestError',
+          message: 'Invalid state'
+        }
+      ]);
+      job = await fetchApi(`/jobs/${job.id}/review`, {
+        body: { ...review, country: '00' },
+        method: 'PUT'
+      });
+      expect(job.errors).toMatchObject([
+        {
+          type: 'InvalidRequestError',
+          message: 'Invalid country'
+        }
+      ]);
+    },
+    30 * 1000
   );
   test('jobs unauthentication', async () => {
     const { errors } = await fetchApi('/jobs?id=232', {
