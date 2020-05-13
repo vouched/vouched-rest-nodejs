@@ -165,10 +165,12 @@ describe('jobs', () => {
         }
       };
       const job = await fetchApi('/jobs', { body, method: 'POST' });
-
       expect(job.result.confidences.selfieSunglasses).toBe(0);
       expect(job.result.confidences.id).toBeLessThan(0.85);
       expect(job.result.confidences.birthDateMatch).toBeGreaterThan(0.9);
+      expect(job.result.success).toBe(false);
+      expect(job.result.successWithSuggestion).toBe(false);
+      expect(job.errors.length > 0).toBe(true);
       expect(job.result.confidences.faceMatch).toBeGreaterThan(0.9);
       expect(job.status).toBe('completed');
     },
