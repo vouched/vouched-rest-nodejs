@@ -39,7 +39,7 @@ describe('invites', () => {
       }
     ]);
   });
-  test('create invite', async () => {
+  test('create invite success', async () => {
     const email = 'darwin66@lkxloans.com';
     const r = await fetchApi('/invites', {
       body: {
@@ -51,6 +51,28 @@ describe('invites', () => {
       }
     });
     expect(r).toMatchObject({
+      send: true,
+      email,
+      firstName: 'John',
+      lastName: 'Bao',
+      phone: '10004007007',
+      contact: 'email'
+    });
+  });
+  test('create invite no send', async () => {
+    const email = 'darwin66@lkxloans.com';
+    const r = await fetchApi('/invites', {
+      body: {
+        email,
+        send: false,
+        firstName: 'John',
+        lastName: 'Bao',
+        phone: '0004007007',
+        contact: 'email' // phone
+      }
+    });
+    expect(r).toMatchObject({
+      send: false,
       email,
       firstName: 'John',
       lastName: 'Bao',
