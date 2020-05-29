@@ -162,6 +162,25 @@ describe('jobs', () => {
     20 * 1000
   );
   test(
+    'job submit no data',
+    async () => {
+      const userPhoto = await imageToBase64(
+        path.dirname(__filename) + '/../data/test-face.png'
+      );
+      const idPhoto = await imageToBase64(
+        path.dirname(__filename) + '/../data/test-id.png'
+      );
+      const body = {
+        type: 'id-verification',
+        params: {}
+      };
+      const job = await fetchApi('/jobs', { body, method: 'POST' });
+      expect(job.result.confidences).toBe(null);
+      expect(job.status).toBe('completed');
+    },
+    20 * 1000
+  );
+  test(
     'job submit',
     async () => {
       const userPhoto = await imageToBase64(
