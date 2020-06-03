@@ -109,6 +109,7 @@ describe('jobs download', () => {
 describe('jobs', () => {
   test('jobs list no params', async () => {
     const { total, page, pageSize, items } = await fetchApi('/jobs', {});
+
     expect(total).toBeGreaterThan(-1);
     expect(pageSize).toBeGreaterThan(-1);
     expect(page).toBeGreaterThan(-1);
@@ -116,7 +117,7 @@ describe('jobs', () => {
   });
   test('jobs list params', async () => {
     const r = await fetchApi(
-      '/jobs?status=completed&ids=["Ep58Ck47","djskjfks"]&from=2011-10-05T14:48:00.000Z',
+      '/jobs?status=completed&ids=["Ep58Ck47","djskjfks"]&from=2011-10-05T14:48:00.000Z&withPhotoUrls=true',
       {}
     );
 
