@@ -89,6 +89,13 @@ describe('invites', () => {
     ]);
   });
 });
+describe('identity documents', () => {
+  test('id documents', async () => {
+    const r = await fetchApi('/identity/documents', {});
+
+    expect(r.documents.length > 0).toBe(true);
+  });
+});
 describe('jobs download', () => {
   test('download confidences false', async () => {
     const { errors } = await fetchApi(
