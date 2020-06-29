@@ -11,6 +11,30 @@ describe('invites', () => {
       { type: 'AuthenticationError', message: 'Unauthorized access' }
     ]);
   });
+  test('crosscheck', async () => {
+    const r = await fetchApi('/identity/crosscheck', {
+      body: {
+        firstName: 'John',
+        lastName: 'Bao',
+        email: 'baoman@mail.com',
+        phone: '917-343-3433',
+        ipAddress: '73.19.102.110',
+        address: {
+          streetAddress: '1 Main St',
+          city: 'Seattle',
+          postalCode: '98031',
+          state: 'WA',
+          country: 'US'
+        }
+      }
+    });
+    expect(r.result.phone.isMatch).toBe(false);
+    expect(r.result.email.isValid).toBe(true);
+    expect(r.result.address.isValid).toBe(true);
+    expect(r.result.confidences.identity).toBeLessThan(0.2);
+    expect(r.result.ipAddress.userType).toBe('residential');
+  });
+
   test('all invites', async () => {
     const { total, page, pageSize, items } = await fetchApi(
       '/invites?pageSize=3&id=mKAUux8h_',
