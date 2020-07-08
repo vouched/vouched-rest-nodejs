@@ -28,6 +28,7 @@ describe('invites', () => {
         }
       }
     });
+    expect(!!r.id).toBe(true);
     expect(r.result.phone.isMatch).toBe(false);
     expect(r.result.email.isValid).toBe(true);
     expect(r.result.address.isValid).toBe(true);
