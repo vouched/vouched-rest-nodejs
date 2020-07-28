@@ -193,7 +193,7 @@ describe('jobs', () => {
       expect(job.result.confidences.faceMatch).toBeLessThan(0.85);
       expect(job.status).toBe('completed');
     },
-    20 * 1000
+    30 * 1000
   );
   test(
     'job submit no data',
@@ -249,7 +249,7 @@ describe('jobs', () => {
       expect(job.result.confidences.faceMatch).toBeGreaterThan(0.9);
       expect(job.status).toBe('completed');
     },
-    20 * 1000
+    30 * 1000
   );
   test(
     'job review',
