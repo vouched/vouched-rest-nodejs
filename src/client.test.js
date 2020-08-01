@@ -161,6 +161,24 @@ describe('jobs', () => {
     expect(items.length).toBeGreaterThan(-1);
   });
   test(
+    'job authenticate',
+    async () => {
+      const userPhoto = await imageToBase64(
+        path.dirname(__filename) + '/../data/test-sunglasses.jpg'
+      );
+      const body = {
+        id: '_1IHlmwLF',
+        userPhoto
+      };
+      const r = await fetchApi('/identity/authenticate', {
+        body,
+        method: 'POST'
+      });
+      console.log(JSON.stringify({ r }));
+    },
+    30 * 1000
+  );
+  test(
     'job submit sunglasses',
     async () => {
       const userPhoto = await imageToBase64(
