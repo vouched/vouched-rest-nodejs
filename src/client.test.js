@@ -367,6 +367,13 @@ describe('jobs', () => {
       { message: 'job: 232 not found', type: 'InvalidRequestError' }
     ]);
   });
+  // other method since some clients don't have deletes
+  test('jobs delete not found', async () => {
+    const { errors } = await fetchApi('/jobs/232/remove', { method: 'POST' });
+    expect(errors).toMatchObject([
+      { message: 'job: 232 not found', type: 'InvalidRequestError' }
+    ]);
+  });
   test('jobs not found', async () => {
     const { errors } = await fetchApi('/jobs/232', {});
     expect(errors).toMatchObject([
