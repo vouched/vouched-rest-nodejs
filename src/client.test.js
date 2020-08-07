@@ -33,7 +33,7 @@ describe('invites', () => {
     expect(r.result.email.isValid).toBe(true);
     expect(r.result.address.isValid).toBe(true);
     expect(r.result.confidences.identity).toBeLessThan(0.2);
-    expect(r.result.ipAddress.userType).toBe('residential');
+    // expect(r.result.ipAddress.userType).toBe('residential');
   });
 
   test('all invites', async () => {
@@ -160,6 +160,24 @@ describe('jobs', () => {
     expect(page).toBeGreaterThan(-1);
     expect(items.length).toBeGreaterThan(-1);
   });
+  test(
+    'job authenticate',
+    async () => {
+      const userPhoto = await imageToBase64(
+        path.dirname(__filename) + '/../data/test-sunglasses.jpg'
+      );
+      const body = {
+        id: '_1IHlmwLF',
+        userPhoto
+      };
+      const r = await fetchApi('/identity/authenticate', {
+        body,
+        method: 'POST'
+      });
+      console.log(JSON.stringify({ r }));
+    },
+    30 * 1000
+  );
   test(
     'job submit sunglasses',
     async () => {
@@ -345,6 +363,13 @@ describe('jobs', () => {
   });
   test('jobs delete not found', async () => {
     const { errors } = await fetchApi('/jobs/232', { method: 'DELETE' });
+    expect(errors).toMatchObject([
+      { message: 'job: 232 not found', type: 'InvalidRequestError' }
+    ]);
+  });
+  // other method since some clients don't have deletes
+  test('jobs delete not found', async () => {
+    const { errors } = await fetchApi('/jobs/232/remove', { method: 'POST' });
     expect(errors).toMatchObject([
       { message: 'job: 232 not found', type: 'InvalidRequestError' }
     ]);
