@@ -33,7 +33,6 @@ describe('invites', () => {
     expect(r.result.email.isValid).toBe(true);
     expect(r.result.address.isValid).toBe(true);
     expect(r.result.confidences.identity).toBeLessThan(0.2);
-    // expect(r.result.ipAddress.userType).toBe('residential');
   });
 
   test('all invites', async () => {
