@@ -166,7 +166,7 @@ describe('jobs', () => {
         path.dirname(__filename) + '/../data/test-sunglasses.jpg'
       );
       const body = {
-        id: '_1IHlmwLF',
+        id: 'sSCQiznqX',
         userPhoto
       };
       const r = await fetchApi('/identity/authenticate', {
@@ -174,6 +174,64 @@ describe('jobs', () => {
         method: 'POST'
       });
       console.log(JSON.stringify({ r }));
+    },
+    30 * 1000
+  );
+  test(
+    'job submit face only',
+    async () => {
+      const userPhoto = await imageToBase64(
+        path.dirname(__filename) + '/../data/test-sunglasses.jpg'
+      );
+      const body = {
+        type: 'id-verification',
+        properties: [
+          {
+            name: 'internal_id',
+            value: 'sdjklfd'
+          }
+        ],
+        params: {
+          firstName: 'John',
+          lastName: 'Bao',
+          dob: '02/11/1995',
+          userPhoto
+        }
+      };
+      const job = await fetchApi('/jobs', { body, method: 'POST' });
+      expect(job.surveyPoll).toBe(null);
+      expect(job.surveyMessage).toBe(null);
+      expect(job.surveyAt).toBe(null);
+      expect(job.status).toBe('completed');
+    },
+    30 * 1000
+  );
+  test(
+    'job submit id',
+    async () => {
+      const idPhoto = await imageToBase64(
+        path.dirname(__filename) + '/../data/test-id.png'
+      );
+      const body = {
+        type: 'id-verification',
+        properties: [
+          {
+            name: 'internal_id',
+            value: 'sdjklfd'
+          }
+        ],
+        params: {
+          firstName: 'John',
+          lastName: 'Bao',
+          dob: '02/11/1995',
+          idPhoto
+        }
+      };
+      const job = await fetchApi('/jobs', { body, method: 'POST' });
+      expect(job.surveyPoll).toBe(null);
+      expect(job.surveyMessage).toBe(null);
+      expect(job.surveyAt).toBe(null);
+      expect(job.status).toBe('completed');
     },
     30 * 1000
   );
