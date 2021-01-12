@@ -438,3 +438,71 @@ describe('jobs', () => {
     ]);
   });
 });
+
+describe("aamva tests", () => {
+
+  test('aamva standalone job test', async () => {
+    const aamvaRequest = {
+      licenseNumber: '520AS4197',
+      country: 'US',
+      lastName: 'Bao',
+      idType: 'drivers-license',
+      state: 'IA',
+      dob: '05/29/1990',
+      issueDate: '05/29/2020',
+      expirationDate: '05/29/2025'
+    } 
+    const r = await fetchApi('/identity/aamva', {
+      body: aamvaRequest
+    });
+    
+    const returnRequestObject = r.request;
+    console.log(returnRequestObject)
+    console.log
+    expect(returnRequestObject).toMatchObject(aamvaRequest);
+    expect(r.result.aamva_status).toBe('Pending');
+    expect(r.result.job_status).toBe('active');
+    expect(r.result.job_type).toBe('id-aamva')
+  });
+
+  test(
+    'job submit with crosscheck and darkweb enabled',
+    async () => {
+      const userPhoto = await imageToBase64(
+        path.dirname(__filename) + '/../data/test-face.png'
+      );
+      const idPhoto = await imageToBase64(
+        path.dirname(__filename) + '/../data/test-id.png'
+      );
+      const body = {
+        type: 'id-verification',
+        params: {
+          firstName: 'John',
+          lastName: 'Bao',
+          dob: '06/22/1970',
+          userPhoto,
+          idPhoto,
+          enableCrossCheck: true,
+          enableDarkWeb: true,
+          enableIPAddress: false,
+          enablePhysicalAddress: false,
+          enableAAMVA: false
+        }
+      };
+      const job = await fetchApi('/jobs', { body, method: 'POST' });
+      expect(job.result.featuresEnabled.idvEnabled).toBe(true);
+      expect(job.result.featuresEnabled.idvBillable).toBe(true);
+      expect(job.result.featuresEnabled.crosscheckEnabled).toBe(true);
+      expect(job.result.featuresEnabled.crosscheckBillable).toBe(true);
+      expect(job.result.featuresEnabled.darkwebEnabled).toBe(true);
+      expect(job.result.featuresEnabled.darkwebBillable).toBe(true);
+      expect(job.result.featuresEnabled.ipAddressEnabled).toBe(false);
+      expect(job.result.featuresEnabled.ipAddressEnabled).toBe(false);
+      expect(job.result.featuresEnabled.ipAddressBillable).toBe(false);
+      expect(job.result.featuresEnabled.physicalAddressBillable).toBe(false);
+      expect(job.result.featuresEnabled.aamvaEnabled).toBe(false);
+      expect(job.result.featuresEnabled.aamvaBillable).toBe(false);
+    },
+    30 * 1000
+  );
+});
