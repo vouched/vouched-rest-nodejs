@@ -32,7 +32,7 @@ describe('invites', () => {
     expect(r.result.phone.isMatch).toBe(false);
     expect(r.result.email.isValid).toBe(true);
     expect(r.result.address.isValid).toBe(true);
-    expect(r.result.confidences.identity).toBeLessThan(0.2);
+    expect(r.result.confidences.identity).toBeLessThan(0.39);
   });
 
   test('all invites', async () => {
@@ -173,7 +173,6 @@ describe('jobs', () => {
         body,
         method: 'POST'
       });
-      console.log(JSON.stringify({ r }));
     },
     30 * 1000
   );
@@ -439,8 +438,7 @@ describe('jobs', () => {
   });
 });
 
-describe("aamva tests", () => {
-
+describe('aamva tests', () => {
   test('aamva standalone job test', async () => {
     const aamvaRequest = {
       licenseNumber: '520AS4197',
@@ -451,18 +449,16 @@ describe("aamva tests", () => {
       dob: '05/29/1990',
       issueDate: '05/29/2020',
       expirationDate: '05/29/2025'
-    } 
+    };
     const r = await fetchApi('/identity/aamva', {
       body: aamvaRequest
     });
-    
+
     const returnRequestObject = r.request;
-    console.log(returnRequestObject)
-    console.log
     expect(returnRequestObject).toMatchObject(aamvaRequest);
     expect(r.result.aamva_status).toBe('Pending');
     expect(r.result.job_status).toBe('active');
-    expect(r.result.job_type).toBe('id-aamva')
+    expect(r.result.job_type).toBe('id-aamva');
   });
 
   test(
