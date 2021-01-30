@@ -39,8 +39,8 @@ describe('invites', () => {
       body: {
         firstName: 'David',
         lastName: 'Smith',
-        email: 'baoman@gmail.com',
-        phone: '917-727-2454',
+        email: 'baoman@mail.com',
+        phone: '917-343-3433',
         ipAddress: '73.19.102.110',
         address: {
           streetAddress: '1 Main St',
@@ -61,8 +61,8 @@ describe('invites', () => {
       body: {
         firstName: 'Jon',
         lastName: 'Doe',
-        email: 'baoman@gmail.com',
-        phone: '917-727-2454',
+        email: 'baoman@mail.com',
+        phone: '917-343-3433',
         ipAddress: '73.19.102.110',
         address: {
           streetAddress: '1 Main St',
