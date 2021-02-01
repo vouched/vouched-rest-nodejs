@@ -117,13 +117,11 @@ describe('invites', () => {
         lastName: 'Bao',
         phone: '0004007007',
         contact: 'email', // phone
-        propVal: {
-          enableIPAddress: false,
-          enablePhysicalAddress: false,
-          enableDarkWeb: false,
-          enableCrossCheck: false,
-          enableAAMVA: false
-        }
+        enableIPAddress: false,
+        enablePhysicalAddress: false,
+        enableDarkWeb: false,
+        enableCrossCheck: false,
+        enableAAMVA: false
       }
     });
     expect(r).toMatchObject({
@@ -134,7 +132,7 @@ describe('invites', () => {
       phone: '+10004007007',
       contact: 'email'
     });
-  });   
+  });  
   test('create invite success', async () => {
     const email = 'darwin66@lkxloans.com';
     const r = await fetchApi('/invites', {
