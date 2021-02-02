@@ -108,6 +108,31 @@ describe('invites', () => {
       }
     ]);
   });
+  test('create invite with props', async () => {
+    const email = 'darwin66@lkxloans.com';
+    const r = await fetchApi('/invites', {
+      body: {
+        email,
+        firstName: 'John',
+        lastName: 'Bao',
+        phone: '0004007007',
+        contact: 'email', // phone
+        enableIPAddress: false,
+        enablePhysicalAddress: false,
+        enableDarkWeb: false,
+        enableCrossCheck: false,
+        enableAAMVA: false
+      }
+    });
+    expect(r).toMatchObject({
+      send: true,
+      email,
+      firstName: 'John',
+      lastName: 'Bao',
+      phone: '+10004007007',
+      contact: 'email'
+    });
+  });  
   test('create invite success', async () => {
     const email = 'darwin66@lkxloans.com';
     const r = await fetchApi('/invites', {
