@@ -8,7 +8,7 @@ describe('invites', () => {
       apiKey: 'jsdkldjfdsljd'
     });
     expect(errors).toMatchObject([
-      { type: 'AuthenticationError', message: 'Unauthorized access' }
+      { type: 'InvalidRequestError', message: 'Account not found.' }
     ]);
   });
   test('crosscheck', async () => {
