@@ -153,6 +153,51 @@ describe('invites', () => {
       contact: 'email'
     });
   });
+
+  test('create invite success with callbackurl', async () => {
+    const email = 'darwin66@lkxloans.com';
+    const callbackURL = "https://webhook.site/130aa1ee-6640-4a0c-88eb-cacd5b3bce8d";
+    const r = await fetchApi('/invites', {
+      body: {
+        email,
+        firstName: 'John',
+        lastName: 'Bao',
+        contact: 'email',
+        callbackURL
+      }
+    });
+
+    expect(r).toMatchObject({
+      send: true,
+      email,
+      firstName: 'John',
+      lastName: 'Bao',
+      contact: 'email',
+      callbackURL
+    });
+  });
+
+  test('create invite failure with bad callbackurl', async () => {
+    const email = 'darwin66@lkxloans.com';
+    const callbackURL = "test";
+    const r = await fetchApi('/invites', {
+      body: {
+        email,
+        firstName: 'John',
+        lastName: 'Bao',
+        contact: 'email',
+        callbackURL
+      }
+    });
+    console.log(JSON.stringify(r,null, 2));
+    expect(r.errors).toMatchObject([
+      {
+        message: "Please enter a valid callbackURL",
+        type: 'InvalidRequestError'
+      }
+    ]);
+  });
+
   test('create invite no send', async () => {
     const email = 'darwin66@lkxloans.com';
     const r = await fetchApi('/invites', {
