@@ -11,74 +11,74 @@ describe('invites', () => {
       { type: 'AuthenticationError', message: 'Unauthorized access' }
     ]);
   });
-  test('crosscheck', async () => {
-    const r = await fetchApi('/identity/crosscheck', {
-      body: {
-        firstName: 'John',
-        lastName: 'Bao',
-        email: 'baoman@mail.com',
-        phone: '917-343-3433',
-        ipAddress: '73.19.102.110',
-        address: {
-          streetAddress: '1 Main St',
-          city: 'Seattle',
-          postalCode: '98031',
-          state: 'WA',
-          country: 'US'
-        }
-      }
-    });
-    expect(!!r.id).toBe(true);
-    expect(r.result.phone.isMatch).toBe(false);
-    expect(r.result.email.isValid).toBe(true);
-    expect(r.result.address.isValid).toBe(true);
-    expect(r.result.confidences.identity).toBeLessThan(0.39);
-  });
-  test('crosscheck errors', async () => {
-    const r = await fetchApi('/identity/crosscheck', {
-      body: {
-        firstName: 'David',
-        lastName: 'Smith',
-        email: 'baoman@mail.com',
-        phone: '917-343-3433',
-        ipAddress: '73.19.102.110',
-        address: {
-          streetAddress: '1 Main St',
-          city: 'Seattle',
-          postalCode: '98031',
-          state: 'WA',
-          country: 'US'
-        }
-      }
-    });
-    //console.log(JSON.stringify(r,null,4))
-    expect(!!r.id).toBe(true);
-    expect(r.result.address.errors[0].type).toBe("NameMatchError")
-    expect(r.result.phone.errors[0].type).toBe("NameMatchError")
-  });
-  test('crosscheck errors', async () => {
-    const r = await fetchApi('/identity/crosscheck', {
-      body: {
-        firstName: 'Jon',
-        lastName: 'Doe',
-        email: 'baoman@mail.com',
-        phone: '917-343-3433',
-        ipAddress: '73.19.102.110',
-        address: {
-          streetAddress: '1 Main St',
-          city: 'Seattle',
-          postalCode: '98031',
-          state: 'WA',
-          country: 'US'
-        }
-      }
-    });
-    //console.log(JSON.stringify(r,null,4))
-    expect(!!r.id).toBe(true);
-    expect(r.result.address.warnings[2].type).toBe("NameMatchError")
-    expect(r.result.address.warnings[2].suggestion).toBe("John Doe")
-    expect(r.result.phone.errors[0].type).toBe("NameMatchError")
-  });  
+  // test('crosscheck', async () => {
+  //   const r = await fetchApi('/identity/crosscheck', {
+  //     body: {
+  //       firstName: 'John',
+  //       lastName: 'Bao',
+  //       email: 'baoman@mail.com',
+  //       phone: '917-343-3433',
+  //       ipAddress: '73.19.102.110',
+  //       address: {
+  //         streetAddress: '1 Main St',
+  //         city: 'Seattle',
+  //         postalCode: '98031',
+  //         state: 'WA',
+  //         country: 'US'
+  //       }
+  //     }
+  //   });
+  //   expect(!!r.id).toBe(true);
+  //   expect(r.result.phone.isMatch).toBe(false);
+  //   expect(r.result.email.isValid).toBe(true);
+  //   expect(r.result.address.isValid).toBe(true);
+  //   expect(r.result.confidences.identity).toBeLessThan(0.39);
+  // });
+  // test('crosscheck errors', async () => {
+  //   const r = await fetchApi('/identity/crosscheck', {
+  //     body: {
+  //       firstName: 'David',
+  //       lastName: 'Smith',
+  //       email: 'baoman@mail.com',
+  //       phone: '917-343-3433',
+  //       ipAddress: '73.19.102.110',
+  //       address: {
+  //         streetAddress: '1 Main St',
+  //         city: 'Seattle',
+  //         postalCode: '98031',
+  //         state: 'WA',
+  //         country: 'US'
+  //       }
+  //     }
+  //   });
+  //   //console.log(JSON.stringify(r,null,4))
+  //   expect(!!r.id).toBe(true);
+  //   expect(r.result.address.errors[0].type).toBe("NameMatchError")
+  //   expect(r.result.phone.errors[0].type).toBe("NameMatchError")
+  // });
+  // test('crosscheck errors', async () => {
+  //   const r = await fetchApi('/identity/crosscheck', {
+  //     body: {
+  //       firstName: 'Jon',
+  //       lastName: 'Doe',
+  //       email: 'baoman@mail.com',
+  //       phone: '917-343-3433',
+  //       ipAddress: '73.19.102.110',
+  //       address: {
+  //         streetAddress: '1 Main St',
+  //         city: 'Seattle',
+  //         postalCode: '98031',
+  //         state: 'WA',
+  //         country: 'US'
+  //       }
+  //     }
+  //   });
+  //   //console.log(JSON.stringify(r,null,4))
+  //   expect(!!r.id).toBe(true);
+  //   expect(r.result.address.warnings[2].type).toBe("NameMatchError")
+  //   expect(r.result.address.warnings[2].suggestion).toBe("John Doe")
+  //   expect(r.result.phone.errors[0].type).toBe("NameMatchError")
+  // });  
   test('all invites', async () => {
     const { total, page, pageSize, items } = await fetchApi(
       '/invites?pageSize=3&id=mKAUux8h_',
