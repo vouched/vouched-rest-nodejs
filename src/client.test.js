@@ -500,10 +500,10 @@ describe('jobs', () => {
     ]);
   });
   test('jobs not found', async () => {
-    const { errors } = await fetchApi('/jobs/232', {});
-    expect(errors).toMatchObject([
-      { message: 'Could not find job: 232', type: 'NotFoundError' }
-    ]);
+    const error = await fetchApi('/jobs/232', {});
+    expect(error).toMatchObject(
+      { message: 'The current request is matched to the defined url template "/api/jobs/{id}" but its http method is not allowed', code: 405 }
+    );
   });
 });
 
