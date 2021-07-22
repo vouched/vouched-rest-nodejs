@@ -505,6 +505,35 @@ describe('jobs', () => {
       { message: 'Could not find job: 232', type: 'NotFoundError' }
     ]);
   });
+
+  test(
+    'job submit with ip address',
+    async () => {
+      const userPhoto = await imageToBase64(
+        path.dirname(__filename) + '/../data/test-sunglasses.jpg'
+      );
+      const body = {
+        type: 'id-verification',
+        properties: [
+          {
+            name: 'internal_id',
+            value: 'sdjklfd'
+          }
+        ],
+        params: {
+          firstName: 'John',
+          lastName: 'Bao',
+          dob: '02/11/1995',
+          userPhoto,
+          ipaddress: '25.255.10.125'
+        }
+      };
+      const job = await fetchApi('/jobs', { body, method: 'POST' });
+      expect(job.status).toBe('completed');
+      expect(job.request.requestInfo.ipaddress).toBe('25.255.10.125');
+    },
+    30 * 1000
+  );
 });
 
 describe('aamva tests', () => {
