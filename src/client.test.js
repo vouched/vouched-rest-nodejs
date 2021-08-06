@@ -592,11 +592,11 @@ describe('aamva tests', () => {
       const body = {
         params: {  
           country: "US",
-          licenseNumber: "170756636",
+          licenseNumber: "179766636",
           idType: "drivers-license",
-          lastName: "VARGHESESSS",
+          lastName: "SMITH",
           state: "CO",
-          dob: "09/01/1994",
+          dob: "10/10/1993",
           issueDate: "10/08/2020",
           expirationDate: "01/21/2025"
         }
