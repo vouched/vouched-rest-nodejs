@@ -570,4 +570,57 @@ describe('aamva tests', () => {
     },
     30 * 1000
   );
+  test(
+    'admin jobs',
+    async () => {
+      const job = await fetchApi('/admin/jobs?pageSize=10&withPhotoUrls=true', {});
+      expect(job.errors[0].type).toBe("AuthenticationError");
+    },
+    30 * 1000
+  );
+  test(
+    'admin jobs ID',
+    async () => {
+      const job = await fetchApi('/admin/jobs?ids=[""]', {});  
+      expect(job.errors[0].type).toBe("AuthenticationError");
+    },
+    30 * 1000
+  ); 
+  test(
+    'admin aamva',
+    async () => {
+      const body = {
+        params: {  
+          country: "US",
+          licenseNumber: "179766636",
+          idType: "drivers-license",
+          lastName: "SMITH",
+          state: "CO",
+          dob: "10/10/1993",
+          issueDate: "10/08/2020",
+          expirationDate: "01/21/2025"
+        }
+      };      
+      const job = await fetchApi('/admin/aamva', { body, method: 'POST' });
+      expect(job.errors[0].type).toBe("AuthenticationError");
+    },
+    30 * 1000
+  );
+  test(
+    'admin create template',
+    async () => {
+      const body = {
+        params: {  
+          country: "US",
+          state: "CO",
+          url: "test",
+          image: "test",
+          type: "test"
+        }
+      };      
+      const job = await fetchApi('/admin/templates', { body, method: 'POST' });
+      expect(job.errors[0].type).toBe("AuthenticationError");
+    },
+    30 * 1000
+  );      
 });
