@@ -739,3 +739,141 @@ describe('GraphQL Tests', () => {
   );           
 });
 
+describe('Onboard Service REST Enpoint Tests', () => {  
+  test(
+    'Key Check Endpoint',
+    async () => {
+      const body = {
+        accountGroupId: "null",
+        key: "testKeyRandom"
+      }
+      const job = await fetchOnboard('/accounts/keycheck', {body, method: 'POST' });
+      expect(job.errors[0].type).toBe("AuthenticationError");
+    },
+    30 * 1000
+  );
+  test(
+    'Reset password email',
+    async () => {
+      const body = {
+        email: "test@vouched.id"
+      }
+      const job = await fetchOnboard('/user/reset-password', {body, method: 'POST' });
+      expect(job.message).toBe("Check your email");
+    },
+    30 * 1000
+  );
+  test(
+    'Reset password',
+    async () => {
+      const body = {
+        "token": "testRandomemails",
+        "recaptchaToken": "testRandomemails",
+        "password": "testRandomemails3!!",
+        "sid": "testRandomemails"
+    }
+      const job = await fetchOnboard('/user/password', {body, method: 'POST' });
+      expect(job.errors[0].type).toBe("InvalidRequestError");
+      expect(job.errors[0].message).toBe("Token expired");
+    },
+    30 * 1000
+  );
+  test(
+    'Post Admin User',
+    async () => {
+      const body = {
+        "accountId": "testRandomemails",
+        "isDisabled": "false"
+    }
+      const job = await fetchOnboard('/admin/user/3', {body, method: 'POST' });
+      expect(job.error).toBe("Not Found!");
+    },
+    30 * 1000
+  );
+  test(
+    'Reset password',
+    async () => {
+      const job = await fetchOnboard('/admin/user/3', {});
+      expect(job.errors[0].type).toBe("AuthenticationError");
+    },
+    30 * 1000
+  );
+  test(
+    'User Info',
+    async () => {
+      const job = await fetchOnboard('/user/info', {});
+      expect(job.errors[0].type).toBe("AuthenticationError");
+    },
+    30 * 1000
+  );
+  test(
+    'User Search',
+    async () => {
+      const job = await fetchOnboard('/users/search', {});
+      expect(job.errors[0].type).toBe("AuthenticationError");
+    },
+    30 * 1000
+  );
+  test(
+    'User Account',
+    async () => {
+      const job = await fetchOnboard('/accounts/users', {});
+      expect(job.errors[0].type).toBe("AuthenticationError");
+    },
+    30 * 1000
+  ); 
+  test(
+    'Key ReGen',
+    async () => {
+      const body = {
+        "type": "signature"
+      }
+      const job = await fetchOnboard('/accounts/key', {body, method: 'POST' });
+      expect(job.errors[0].type).toBe("AuthenticationError");
+    },
+    30 * 1000
+  ); 
+  test(
+    'Create Account',
+    async () => {
+      const body = {
+        data:{
+          "email": "sig@vouched.id",
+          "password": "Signature11!",
+          "tier": "signature"
+        }
+      }
+      const job = await fetchOnboard('/accounts', {body, method: 'POST' });
+      expect(job.errors[0].type).toBe("InvalidRequestError");
+    },
+    30 * 1000
+  ); 
+  test(
+    'Account Groups',
+    async () => {
+      const job = await fetchOnboard('/accounts/groups', {});
+      expect(job.errors[0].type).toBe("AuthenticationError");
+    },
+    30 * 1000
+  );
+  test(
+    'Update Account Settings',
+    async () => {
+      const body = {
+        update:{
+        }
+      }
+      const job = await fetchOnboard('/accounts/settings', {body, method: 'POST' });
+      expect(job.errors[0].type).toBe("AuthenticationError");
+    },
+    30 * 1000
+  ); 
+  test(
+    'Retrieve Account Settings',
+    async () => {
+      const job = await fetchOnboard('/accounts/settings', {});
+      expect(job.errors[0].type).toBe("AuthenticationError");
+    },
+    30 * 1000
+  );               
+});

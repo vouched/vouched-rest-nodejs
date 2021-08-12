@@ -95,6 +95,26 @@ export const fetchApi = (
   }).then(res => res.json());
 };
 
+export const fetchOnboard = (
+  path,
+  { body = null, method = null } = {}
+) => {
+  const url = `${config.ONBOARD_URL}${path}`;
+  console.log(url);
+  if (!method) {
+    method = body ? 'POST' : 'GET';
+  }
+  // console.log(method);
+  return fetch(url, {
+    method,
+    body: body ? JSON.stringify(body) : null,
+    headers: {
+      'Content-Type': 'application/json',
+      'authorization': 'random'   //authorization uses the token
+    }
+  }).then(res => res.json());
+};
+
 export const fetchGraphQl = (
   { body = null, method = null, apiKey = config.API_PUBLIC_KEY } = {}
 ) => {
