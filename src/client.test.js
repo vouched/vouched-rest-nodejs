@@ -1,6 +1,6 @@
 const path = require('path');
-
-const { fetchApi, imageToBase64 } = require('./client');
+const config = require('./config');
+const { fetchApi, imageToBase64, fetchOnboard, fetchGraphQl } = require('./client');
 
 describe('invites', () => {
   test('invites unauthorized', async () => {
@@ -570,6 +570,8 @@ describe('aamva tests', () => {
     },
     30 * 1000
   );
+});
+describe('Admin Tests', () => {  
   test(
     'admin jobs',
     async () => {
@@ -622,5 +624,118 @@ describe('aamva tests', () => {
       expect(job.errors[0].type).toBe("AuthenticationError");
     },
     30 * 1000
-  );      
+  );
+  test(
+    'admin jobs with Admin Key',
+    async () => {
+      const job = await fetchApi('/admin/jobs?pageSize=10&withPhotoUrls=true', {apiKey: config.API_ADMIN_KEY });
+      expect(job.errors[0].type).toBe("AuthenticationError");
+    },
+    30 * 1000
+  );
+  test(
+    'admin jobs ID with Admin Key',
+    async () => {
+      const job = await fetchApi('/admin/jobs?ids=[""]', {apiKey: config.API_ADMIN_KEY });  
+      expect(job.errors[0].type).toBe("AuthenticationError");
+    },
+    30 * 1000
+  ); 
+  test(
+    'admin aamva with Admin Key',
+    async () => {
+      const body = {
+        params: {  
+          country: "US",
+          licenseNumber: "179766636",
+          idType: "drivers-license",
+          lastName: "SMITH",
+          state: "CO",
+          dob: "10/10/1993",
+          issueDate: "10/08/2020",
+          expirationDate: "01/21/2025"
+        }
+      };      
+      const job = await fetchApi('/admin/aamva', { body, method: 'POST', apiKey: config.API_ADMIN_KEY  });
+      expect(job.errors[0].type).toBe("AuthenticationError");
+    },
+    30 * 1000
+  );
+  test(
+    'admin create template with Admin Key',
+    async () => {
+      const body = {
+        params: {  
+          country: "US",
+          state: "CO",
+          url: "test",
+          image: "test",
+          type: "test"
+        }
+      };      
+      const job = await fetchApi('/admin/templates', { body, method: 'POST', apiKey: config.API_ADMIN_KEY  });
+      expect(job.errors[0].type).toBe("AuthenticationError");
+    },
+    30 * 1000
+  );   
 });
+describe('GraphQL Tests', () => {
+  test(
+    'graphQL jobByToken',
+    async () => {
+      const body = {
+        operationName:"jobByToken",
+        variables:{"token":"randomTokenValue"},
+        query:"query jobByToken($token: String!) {\n  jobByToken(token: $token) {\n    ...FullJob\n    __typename\n"
+        +"}\n}\n\nfragment FullJob on Job {\n  result {\n  id\n  }\n  __typename\n}\n"
+      };      
+      const job = await fetchGraphQl({ body, method: 'POST' });
+      expect(job.errors[0].extensions.code).toBe("UNAUTHENTICATED");
+    },
+    30 * 1000
+  );
+  test(
+    'graphQL downloadJob',
+    async () => {
+      const body = {
+        operationName:"downloadJob",
+        variables:{"id":"ID!","review":"true", "confidences":"true"},
+        query:"query downloadJob($id: ID!, $review: Boolean, $confidences: Boolean) {  downloadJob(id: $id, review: $review, confidences: $confidences) {  review confidences pdf  id } }"
+      };      
+      const job = await fetchGraphQl({ body, method: 'POST' });
+      //console.log(JSON.stringify(job,null,4))
+      expect(job.errors[0].extensions.code).toBe("UNAUTHENTICATED");
+    },
+    30 * 1000
+  ); 
+  test(
+    'graphQL reviewJob',
+    async () => {
+      const body = {
+        operationName:"reviewJob",
+        variables:{"mgrRequired":"true"},
+        query:"query reviewJob($mgrRequired: Boolean) { reviewJob(mgrRequired: $mgrRequired) { ackId } }"
+      };      
+      const job = await fetchGraphQl({ body, method: 'POST' });
+      //console.log(JSON.stringify(job,null,4))
+      expect(job.errors[0].extensions.code).toBe("UNAUTHENTICATED");
+    },
+    30 * 1000
+  );
+  test(
+    'graphQL job',
+    async () => {
+      const body = {
+        operationName:"job",
+        variables:{"id":"ID!","signedUrl":"true","withHashErrors":"true","includeResults":"true"},
+        query:"query job( $id: ID! $signedUrl: Boolean $withHashErrors: Boolean $includeResults: Boolean ) {  job( id: $id withHashErrors: $withHashErrors signedUrl: $signedUrl  includeResults: $includeResults ) {\n    ...FullJob\n    __typename\n"
+        +"}\n}\n\nfragment FullJob on Job {\n  result {\n  id\n  }\n  __typename\n}\n"
+      };      
+      const job = await fetchGraphQl({ body, method: 'POST' });
+      //console.log(JSON.stringify(job,null,4))
+      expect(job.data.job).toBe(null);
+    },
+    30 * 1000
+  );           
+});
+
