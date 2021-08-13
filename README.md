@@ -8,7 +8,7 @@
 
 ```
 API_ADMIN_KEY=*****     Private Key using Admin Account
-API_PRIVATE_KEY=*****   Private Key using Admin Account
+API_PRIVATE_KEY=*****   Private Key using Non-admin Account
 API_PUBLIC_KEY=*****
 ```
 
