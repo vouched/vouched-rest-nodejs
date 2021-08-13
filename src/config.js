@@ -6,5 +6,5 @@ module.exports = {
   API_PUBLIC_KEY: process.env.API_PUBLIC_KEY,
   API_URL: process.env.API_URL || 'https://verify.stage.vouched.id/api',
   API_GRAPHQL_URL: process.env.API_GRAPHQL_URL || 'https://verify.stage.vouched.id/graphql',
-  ONBOARD_URL: process.env.ONBOARD_URL || 'https://onboard.prod.vouched.id/api',
+  ONBOARD_URL: process.env.ONBOARD_URL || 'https://onboard.stage.vouched.id/api',
 };

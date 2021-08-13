@@ -100,7 +100,6 @@ export const fetchOnboard = (
   { body = null, method = null } = {}
 ) => {
   const url = `${config.ONBOARD_URL}${path}`;
-  console.log(url);
   if (!method) {
     method = body ? 'POST' : 'GET';
   }
