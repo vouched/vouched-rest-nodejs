@@ -77,7 +77,7 @@ export const imageToBase64 = async path => {
 
 export const fetchApi = (
   path,
-  { body = null, method = null, apiKey = config.API_KEY } = {}
+  { body = null, method = null, apiKey = config.API_PRIVATE_KEY } = {}
 ) => {
   const url = `${config.API_URL}${path}`;
   // console.log(method);
@@ -91,6 +91,43 @@ export const fetchApi = (
     headers: {
       'Content-Type': 'application/json',
       'X-Api-Key': apiKey
+    }
+  }).then(res => res.json());
+};
+
+export const fetchOnboard = (
+  path,
+  { body = null, method = null } = {}
+) => {
+  const url = `${config.ONBOARD_URL}${path}`;
+  if (!method) {
+    method = body ? 'POST' : 'GET';
+  }
+  // console.log(method);
+  return fetch(url, {
+    method,
+    body: body ? JSON.stringify(body) : null,
+    headers: {
+      'Content-Type': 'application/json',
+      'authorization': 'random'   //authorization uses the token
+    }
+  }).then(res => res.json());
+};
+
+export const fetchGraphQl = (
+  { body = null, method = null, apiKey = config.API_PUBLIC_KEY } = {}
+) => {
+  const url = `${config.API_GRAPHQL_URL}`;
+  if (!method) {
+    method = body ? 'POST' : 'GET';
+  }
+  // console.log(method);
+  return fetch(url, {
+    method,
+    body: body ? JSON.stringify(body) : null,
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-id': apiKey
     }
   }).then(res => res.json());
 };
