@@ -7,7 +7,9 @@
 - Create ```.env``` where the contents are:
 
 ```
-API_KEY=*****
+API_ADMIN_KEY=*****     Private Key using Admin Account
+API_PRIVATE_KEY=*****   Private Key using Non-admin Account
+API_PUBLIC_KEY=*****
 ```
 
 - Install [sharp](https://github.com/lovell/sharp)
