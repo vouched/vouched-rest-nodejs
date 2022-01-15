@@ -267,9 +267,6 @@ describe('jobs', () => {
         }
       };
       const job = await fetchApi('/jobs', { body, method: 'POST' });
-      expect(job.surveyPoll).toBe(null);
-      expect(job.surveyMessage).toBe(null);
-      expect(job.surveyAt).toBe(null);
       expect(job.status).toBe('completed');
     },
     30 * 1000
