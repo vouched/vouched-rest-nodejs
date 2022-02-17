@@ -567,6 +567,68 @@ describe('aamva tests', () => {
     },
     30 * 1000
   );
+  test(
+    'job submit identity merge test 1',
+    async () => {
+      const userPhoto = await imageToBase64(
+        path.dirname(__filename) + '/../data/test-face.png'
+      );
+      const idPhoto = await imageToBase64(
+        path.dirname(__filename) + '/../data/residence_cards/GBresidenceFront.jpg'
+      );
+      const backIdPhoto = await imageToBase64(
+        path.dirname(__filename) + '/../data/residence_cards/GBresidenceBack.jpg'
+      );      
+      const body = {
+        type: 'id-verification',
+        params: {
+          firstName: 'Documento',
+          lastName: 'El',
+          dob: '06/22/1970',
+          userPhoto,
+          idPhoto,
+          backIdPhoto
+        }
+      };
+      const job = await fetchApi('/jobs', { body, method: 'POST' });
+      expect(typeof job.result?.lastName).toBe('string');
+      expect(typeof job.result?.firstName).toBe('string');
+      expect(typeof job.result?.birthDate).toBe('string');
+      expect(job.result?.gender?.gender).toBe('man');
+    },
+    30 * 1000
+  ); 
+  test(
+    'job submit identity merge test 2',
+    async () => {
+      const userPhoto = await imageToBase64(
+        path.dirname(__filename) + '/../data/test-face.png'
+      );
+      const idPhoto = await imageToBase64(
+        path.dirname(__filename) + '/../data/residence_cards/GBresidenceFront.jpg'
+      );
+      const backIdPhoto = await imageToBase64(
+        path.dirname(__filename) + '/../data/residence_cards/GBresidenceBack.png'
+      );      
+      const body = {
+        type: 'id-verification',
+        params: {
+          firstName: 'Documento',
+          lastName: 'El',
+          dob: '06/22/1970',
+          userPhoto,
+          idPhoto,
+          backIdPhoto
+        }
+      };
+      const job = await fetchApi('/jobs', { body, method: 'POST' });
+      expect(typeof job.result?.lastName).toBe('string');
+      expect(typeof job.result?.firstName).toBe('string');
+      expect(typeof job.result?.birthDate).toBe('string');
+      expect(job.result?.gender?.gender).toBe('woman');
+    },
+    30 * 1000
+  );    
 });
 describe('Admin Tests', () => {  
   test(
