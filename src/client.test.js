@@ -78,7 +78,7 @@ describe('invites', () => {
   //   expect(r.result.address.warnings[2].type).toBe("NameMatchError")
   //   expect(r.result.address.warnings[2].suggestion).toBe("John Doe")
   //   expect(r.result.phone.errors[0].type).toBe("NameMatchError")
-  // });  
+  // });
   test('all invites', async () => {
     const { total, page, pageSize, items } = await fetchApi(
       '/invites?pageSize=3&id=mKAUux8h_',
@@ -132,7 +132,7 @@ describe('invites', () => {
       phone: '+10004007007',
       contact: 'email'
     });
-  });  
+  });
   test('create invite success', async () => {
     const email = 'darwin66@lkxloans.com';
     const r = await fetchApi('/invites', {
@@ -483,6 +483,7 @@ describe('jobs', () => {
       { type: 'AuthenticationError', message: 'Unauthorized access' }
     ]);
   });
+
   test('jobs delete not found', async () => {
     const { errors } = await fetchApi('/jobs/232', { method: 'DELETE' });
     expect(errors).toMatchObject([
@@ -495,6 +496,14 @@ describe('jobs', () => {
     expect(errors).toMatchObject([
       { message: 'job: 232 not found', type: 'InvalidRequestError' }
     ]);
+      test('jobs search', async () => {
+          const { errors } = await fetchApi('/api/accounts/search?sid=""', {
+              apiKey: 'jsdkldjfdsljd'
+          });
+          expect(errors).toMatchObject([
+              { type: 'AuthenticationError', message: 'Unauthorized access' }
+          ]);
+      });
   });
   test('jobs not found', async () => {
     const { errors } = await fetchApi('/jobs/232', {});
@@ -568,7 +577,7 @@ describe('aamva tests', () => {
     30 * 1000
   );
 });
-describe('Admin Tests', () => {  
+describe('Admin Tests', () => {
   test(
     'admin jobs',
     async () => {
@@ -580,16 +589,24 @@ describe('Admin Tests', () => {
   test(
     'admin jobs ID',
     async () => {
-      const job = await fetchApi('/admin/jobs?ids=[""]', {});  
+      const job = await fetchApi('/admin/jobs?ids=[""]', {});
       expect(job.errors[0].type).toBe("AuthenticationError");
     },
     30 * 1000
-  ); 
-  test(
+  );
+    test(
+        'search jobs',
+        async () => {
+            const job = await fetchApi('/admin/accounts/search?sid="ABC123"', {});
+            expect(job.errors[0].type).toBe("AuthenticationError");
+        },
+        30 * 1000
+    );
+    test(
     'admin aamva',
     async () => {
       const body = {
-        params: {  
+        params: {
           country: "US",
           licenseNumber: "179766636",
           idType: "drivers-license",
@@ -599,7 +616,7 @@ describe('Admin Tests', () => {
           issueDate: "10/08/2020",
           expirationDate: "01/21/2025"
         }
-      };      
+      };
       const job = await fetchApi('/admin/aamva', { body, method: 'POST' });
       expect(job.errors[0].type).toBe("AuthenticationError");
     },
@@ -609,14 +626,14 @@ describe('Admin Tests', () => {
     'admin create template',
     async () => {
       const body = {
-        params: {  
+        params: {
           country: "US",
           state: "CO",
           url: "test",
           image: "test",
           type: "test"
         }
-      };      
+      };
       const job = await fetchApi('/admin/templates', { body, method: 'POST' });
       expect(job.errors[0].type).toBe("AuthenticationError");
     },
@@ -633,16 +650,16 @@ describe('Admin Tests', () => {
   test(
     'admin jobs ID with Admin Key',
     async () => {
-      const job = await fetchApi('/admin/jobs?ids=[""]', {apiKey: config.API_ADMIN_KEY });  
+      const job = await fetchApi('/admin/jobs?ids=[""]', {apiKey: config.API_ADMIN_KEY });
       expect(job.errors[0].type).toBe("AuthenticationError");
     },
     30 * 1000
-  ); 
+  );
   test(
     'admin aamva with Admin Key',
     async () => {
       const body = {
-        params: {  
+        params: {
           country: "US",
           licenseNumber: "179766636",
           idType: "drivers-license",
@@ -652,7 +669,7 @@ describe('Admin Tests', () => {
           issueDate: "10/08/2020",
           expirationDate: "01/21/2025"
         }
-      };      
+      };
       const job = await fetchApi('/admin/aamva', { body, method: 'POST', apiKey: config.API_ADMIN_KEY  });
       expect(job.errors[0].type).toBe("AuthenticationError");
     },
@@ -662,19 +679,19 @@ describe('Admin Tests', () => {
     'admin create template with Admin Key',
     async () => {
       const body = {
-        params: {  
+        params: {
           country: "US",
           state: "CO",
           url: "test",
           image: "test",
           type: "test"
         }
-      };      
+      };
       const job = await fetchApi('/admin/templates', { body, method: 'POST', apiKey: config.API_ADMIN_KEY  });
       expect(job.errors[0].type).toBe("AuthenticationError");
     },
     30 * 1000
-  );   
+  );
 });
 describe('GraphQL Tests', () => {
   test(
@@ -685,7 +702,7 @@ describe('GraphQL Tests', () => {
         variables:{"token":"randomTokenValue"},
         query:"query jobByToken($token: String!) {\n  jobByToken(token: $token) {\n    ...FullJob\n    __typename\n"
         +"}\n}\n\nfragment FullJob on Job {\n  result {\n  id\n  }\n  __typename\n}\n"
-      };      
+      };
       const job = await fetchGraphQl({ body, method: 'POST' });
       expect(job.errors[0].extensions.code).toBe("UNAUTHENTICATED");
     },
@@ -698,13 +715,13 @@ describe('GraphQL Tests', () => {
         operationName:"downloadJob",
         variables:{"id":"ID!","review":"true", "confidences":"true"},
         query:"query downloadJob($id: ID!, $review: Boolean, $confidences: Boolean) {  downloadJob(id: $id, review: $review, confidences: $confidences) {  review confidences pdf  id } }"
-      };      
+      };
       const job = await fetchGraphQl({ body, method: 'POST' });
       //console.log(JSON.stringify(job,null,4))
       expect(job.errors[0].extensions.code).toBe("UNAUTHENTICATED");
     },
     30 * 1000
-  ); 
+  );
   test(
     'graphQL reviewJob',
     async () => {
@@ -712,7 +729,7 @@ describe('GraphQL Tests', () => {
         operationName:"reviewJob",
         variables:{"mgrRequired":"true"},
         query:"query reviewJob($mgrRequired: Boolean) { reviewJob(mgrRequired: $mgrRequired) { ackId } }"
-      };      
+      };
       const job = await fetchGraphQl({ body, method: 'POST' });
       //console.log(JSON.stringify(job,null,4))
       expect(job.errors[0].extensions.code).toBe("UNAUTHENTICATED");
@@ -727,16 +744,16 @@ describe('GraphQL Tests', () => {
         variables:{"id":"ID!","signedUrl":"true","withHashErrors":"true","includeResults":"true"},
         query:"query job( $id: ID! $signedUrl: Boolean $withHashErrors: Boolean $includeResults: Boolean ) {  job( id: $id withHashErrors: $withHashErrors signedUrl: $signedUrl  includeResults: $includeResults ) {\n    ...FullJob\n    __typename\n"
         +"}\n}\n\nfragment FullJob on Job {\n  result {\n  id\n  }\n  __typename\n}\n"
-      };      
+      };
       const job = await fetchGraphQl({ body, method: 'POST' });
       //console.log(JSON.stringify(job,null,4))
       expect(job.data.job).toBe(null);
     },
     30 * 1000
-  );           
+  );
 });
 
-describe('Onboard Service REST Enpoint Tests', () => {  
+describe('Onboard Service REST Enpoint Tests', () => {
   test(
     'Key Check Endpoint',
     async () => {
@@ -818,7 +835,7 @@ describe('Onboard Service REST Enpoint Tests', () => {
       expect(job.errors[0].type).toBe("AuthenticationError");
     },
     30 * 1000
-  ); 
+  );
   test(
     'Key ReGen',
     async () => {
@@ -829,7 +846,7 @@ describe('Onboard Service REST Enpoint Tests', () => {
       expect(job.errors[0].type).toBe("AuthenticationError");
     },
     30 * 1000
-  ); 
+  );
   test(
     'Create Account',
     async () => {
@@ -844,7 +861,7 @@ describe('Onboard Service REST Enpoint Tests', () => {
       expect(job.errors[0].type).toBe("InvalidRequestError");
     },
     30 * 1000
-  ); 
+  );
   test(
     'Account Groups',
     async () => {
@@ -864,7 +881,7 @@ describe('Onboard Service REST Enpoint Tests', () => {
       expect(job.errors[0].type).toBe("AuthenticationError");
     },
     30 * 1000
-  ); 
+  );
   test(
     'Retrieve Account Settings',
     async () => {
@@ -872,5 +889,5 @@ describe('Onboard Service REST Enpoint Tests', () => {
       expect(job.errors[0].type).toBe("AuthenticationError");
     },
     30 * 1000
-  );               
+  );
 });
